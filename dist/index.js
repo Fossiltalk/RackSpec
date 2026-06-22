@@ -1120,12 +1120,19 @@ var ARMY_RIBBONS = [
     id: "army-msm",
     name: "Meritorious Service Medal (Army)",
     branch: ["us-army"],
+    // Crimson with 5 narrow white pinstripes evenly spaced (MIL-DTL-11589)
     stripes: [
-      { color: "$crimson", width: 1 },
-      { color: "$white", width: 2 },
-      { color: "$crimson", width: 5 },
-      { color: "$white", width: 2 },
-      { color: "$crimson", width: 1 }
+      { color: "$crimson", width: 8 },
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 8 }
     ],
     authorizedDevices: ["olc"],
     frame: "none"
@@ -1229,7 +1236,7 @@ var ARMY_RIBBONS = [
     id: "army-asr",
     name: "Army Service Ribbon",
     branch: ["us-army"],
-    // Rainbow: scarlet | orange | golden-yellow | myrtle-green | blue | myrtle-green | golden-yellow | orange | scarlet
+    // Symmetric rainbow: scarlet edges → blue center (AR 600-8-22; spectrum represents assignments)
     stripes: [
       { color: "$scarlet", width: 14 },
       { color: "$persian-orange", width: 10 },
@@ -1369,12 +1376,13 @@ var ARMY_RIBBONS = [
     id: "army-mfo",
     name: "Multinational Force and Observers Medal (Army)",
     branch: ["us-army"],
+    // Orange dominant flanks | narrow olive green | narrow white center
     stripes: [
-      { color: "$persian-orange", width: 6 },
-      { color: "$primitive-green", width: 2 },
-      { color: "$white", width: 6 },
-      { color: "$primitive-green", width: 2 },
-      { color: "$persian-orange", width: 6 }
+      { color: "$persian-orange", width: 36 },
+      { color: "$primitive-green", width: 4 },
+      { color: "$white", width: 8 },
+      { color: "$primitive-green", width: 4 },
+      { color: "$persian-orange", width: 36 }
     ],
     authorizedDevices: ["num"],
     frame: "none"

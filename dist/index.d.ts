@@ -102,8 +102,13 @@ declare const STUB_RIBBONS: RegistryEntry[];
 
 /**
  * Named color palette (§13.3).
- * Maps palette slug names to sRGB hex values (approximations of PMS/AMS-STD-595).
- * Hex values are render approximations; physical chips are authoritative.
+ * Maps palette slug names to sRGB hex values.
+ *
+ * Hex values are render approximations of PMS/AMS-STD-595 physical chips.
+ * Physical chips and FS-595/AMS-STD-595 are authoritative for manufacturing;
+ * hex values are sufficient for on-screen rendering.
+ *
+ * TIOH = The Institute of Heraldry (authoritative for US awards)
  */
 declare const PALETTE: Record<string, string>;
 
@@ -116,4 +121,4 @@ declare const PALETTE: Record<string, string>;
  */
 declare function renderSpec(spec: string, options?: RenderOptions): string;
 
-export { type Decoration, type DeviceToken, type FlagToken, type Header, type InlineStripeRef, PALETTE, type ParseError, type ParseErrorCode, type RackSpec, RackSpecParseError, type RegistryEntry, type RegistryStripe, type RenderOptions, type RibbonRef, type RibbonToken, type Row, STUB_RIBBONS, type SlugRef, type Stripe, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderLayout as render, renderSpec, resolveSlug };
+export { type Decoration, type DeviceToken, type FlagToken, type Header, type InlineStripeRef, PALETTE, type ParseError, type ParseErrorCode, type RackSpec, RackSpecParseError, type RegistryEntry, type RegistryStripe, type RenderOptions, type RibbonRef, type RibbonToken, type Row, STUB_RIBBONS, type SlugRef, type Stripe, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderSpec as render, renderLayout, renderSpec, resolveSlug };

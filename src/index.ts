@@ -1,5 +1,5 @@
 export { parse } from './parser.js';
-export { renderLayout as render } from './renderer.js';
+export { renderLayout } from './renderer.js';
 export { loadRegistry, mergeRegistry, resolveSlug, getDefaultRegistry } from './registry.js';
 export { STUB_RIBBONS } from './data/ribbons.js';
 export { PALETTE } from './data/palette.js';
@@ -40,3 +40,6 @@ export function renderSpec(spec: string, options?: RenderOptions): string {
   const rack = parse(spec);
   return renderLayout(rack, options);
 }
+
+/** Primary entry point: parse a RackSpec DSL string and return SVG. */
+export { renderSpec as render };

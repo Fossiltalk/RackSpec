@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RackSpec Preview</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --accent:   #388bfd;
+      --error-bg: #3d1a1a;
+      --error:    #f85149;
+      --success:  #3fb950;
+      --radius:   6px;
+      --mono:     'JetBrains Mono', 'Fira Mono', 'Cascadia Code', ui-monospace, monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    header span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      grid-template-rows: 1fr;
+      height: calc(100vh - 53px);
+    }
+
+    .panel {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .examples {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .examples-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .example-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--accent);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 5px 8px;
+      text-align: left;
+      transition: border-color 0.1s, background 0.1s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .example-btn:hover {
+      background: var(--surface);
+      border-color: var(--accent);
+    }
+
+    textarea {
+      flex: 1;
+      background: var(--bg);
+      border: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.5;
+      outline: none;
+      padding: 16px;
+      resize: none;
+      width: 100%;
+    }
+
+    textarea::placeholder { color: var(--muted); }
+
+    .output-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .output-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .status-dot.ok  { background: var(--success); }
+    .status-dot.err { background: var(--error); }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 3px 8px;
+      transition: color 0.1s, border-color 0.1s;
+    }
+
+    .copy-btn:hover { color: var(--text); border-color: var(--muted); }
+    .copy-btn:disabled { opacity: 0.4; cursor: default; }
+
+    .output-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .output-scroll.empty {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder-text {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .error-box {
+      background: var(--error-bg);
+      border: 1px solid var(--error);
+      border-radius: var(--radius);
+      color: var(--error);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 12px 16px;
+      width: 100%;
+      max-width: 600px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #svg-output svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* checkerboard behind SVG so transparency is visible */
+    #svg-output {
+      background:
+        repeating-conic-gradient(#1e2430 0% 25%, #252c3a 0% 50%)
+        0 0 / 16px 16px;
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>RackSpec</h1>
+  <span>military ribbon rack renderer</span>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="panel-header">
+      <span>DSL Input</span>
+    </div>
+
+    <div class="examples">
+      <div class="examples-label">Examples</div>
+      <button class="example-btn" data-spec="rack/v1;br:us-army;ut:service;rw:3;army-bsm,army-ph,army-arcom|army-ndsm,army-gwots,army-asr">3-ribbon service rack (Army)</button>
+      <button class="example-btn" data-spec="rack/v1;br:us-army;ut:service;rw:3;army-bsm~olcb1,army-ph~st,army-arcom|army-ndsm,army-gwots,army-gcm~knt1">With devices</button>
+      <button class="example-btn" data-spec="rack/v1;br:us-army;ut:service;rw:3;ra:c;army-bsm,army-ph|army-ndsm,army-gwots,army-arcom|army-gcm">Short top row (centered)</button>
+      <button class="example-btn" data-spec="rack/v1;br:us-army;ut:service;rw:3;army-puc~@f:gold,army-ph,army-bsm|army-arcom,army-ndsm,army-gcm">Unit citation with frame</button>
+    </div>
+
+    <textarea
+      id="spec-input"
+      spellcheck="false"
+      placeholder="rack/v1;br:us-army;ut:service;rw:3;army-bsm,army-ph,army-ndsm"
+    ></textarea>
+  </div>
+
+  <div class="output-panel">
+    <div class="output-header">
+      <div class="status">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">Ready</span>
+      </div>
+      <button class="copy-btn" id="copy-btn" disabled>Copy SVG</button>
+    </div>
+
+    <div class="output-scroll empty" id="output-scroll">
+      <div class="placeholder-text" id="placeholder">
+        Enter a RackSpec DSL string to render a ribbon rack.
+      </div>
+      <div id="svg-output" style="display:none"></div>
+      <div class="error-box" id="error-box" style="display:none"></div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+  import { render } from './rackspec.js';
+
+  const input      = document.getElementById('spec-input');
+  const svgOutput  = document.getElementById('svg-output');
+  const errorBox   = document.getElementById('error-box');
+  const placeholder = document.getElementById('placeholder');
+  const statusDot  = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  const copyBtn    = document.getElementById('copy-btn');
+  const scroll     = document.getElementById('output-scroll');
+
+  let lastSVG = '';
+  let debounceTimer = null;
+
+  function setStatus(state, message) {
+    statusDot.className = 'status-dot' + (state ? ` ${state}` : '');
+    statusText.textContent = message;
+  }
+
+  function showState(state) {
+    placeholder.style.display = state === 'empty' ? '' : 'none';
+    svgOutput.style.display   = state === 'svg'   ? '' : 'none';
+    errorBox.style.display    = state === 'error'  ? '' : 'none';
+    scroll.classList.toggle('empty', state !== 'svg');
+  }
+
+  function renderSpec(spec) {
+    const trimmed = spec.trim();
+
+    if (!trimmed) {
+      showState('empty');
+      setStatus('', 'Ready');
+      copyBtn.disabled = true;
+      lastSVG = '';
+      return;
+    }
+
+    try {
+      const svg = render(trimmed);
+      lastSVG = svg;
+      svgOutput.innerHTML = svg;
+      showState('svg');
+      setStatus('ok', 'Rendered');
+      copyBtn.disabled = false;
+    } catch (err) {
+      lastSVG = '';
+      errorBox.textContent = err.message ?? String(err);
+      showState('error');
+      setStatus('err', 'Error');
+      copyBtn.disabled = true;
+    }
+  }
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => renderSpec(input.value), 250);
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!lastSVG) return;
+    await navigator.clipboard.writeText(lastSVG);
+    const prev = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = prev; }, 1500);
+  });
+
+  document.querySelectorAll('.example-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.spec;
+      renderSpec(input.value);
+    });
+  });
+</script>
+
+</body>
+</html>

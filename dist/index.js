@@ -296,202 +296,1516 @@ function maybeDecodeBase64url(input) {
   return input;
 }
 
-// src/data/ribbons.ts
-var STUB_RIBBONS = [
-  // ─── Army ──────────────────────────────────────────────────────────────────
+// src/data/ribbons/us-joint.ts
+var ALL_US = ["us-army", "us-navy", "us-usmc", "us-af", "us-ssf", "us-uscg"];
+var US_JOINT_RIBBONS = [
+  // ─── DEFENSE-WIDE DECORATIONS ─────────────────────────────────────────────
   {
-    // Exact stripe definition from spec §13.4
-    id: "army-bsm",
-    name: "Bronze Star Medal",
-    branch: ["us-army"],
+    id: "defense-distinguished-service",
+    name: "Defense Distinguished Service Medal",
+    branch: ALL_US,
     stripes: [
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 3 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$imperial-blue", width: 3 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 3 },
-      { color: "#FFFFFF", width: 1 }
+      { color: "$bluebird", width: 24 },
+      { color: "$golden-yellow", width: 16 },
+      { color: "$scarlet", width: 8 },
+      { color: "$golden-yellow", width: 16 },
+      { color: "$bluebird", width: 24 }
     ],
-    authorizedDevices: ["olcb", "olcs", "vd"],
+    authorizedDevices: ["olc", "st"],
     frame: "none"
   },
   {
-    // Exact stripe definition from spec §13.4
-    id: "army-puc",
-    name: "Presidential Unit Citation",
+    id: "defense-superior-service",
+    name: "Defense Superior Service Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$golden-yellow", width: 12 },
+      { color: "$bluebird", width: 16 },
+      { color: "$white", width: 12 },
+      { color: "$scarlet", width: 8 },
+      { color: "$white", width: 12 },
+      { color: "$bluebird", width: 16 },
+      { color: "$golden-yellow", width: 12 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "defense-meritorious-service",
+    name: "Defense Meritorious Service Medal",
+    branch: ALL_US,
+    // †Approximate — bluebird outer, crimson/white layered center
+    stripes: [
+      { color: "$bluebird", width: 8 },
+      { color: "$white", width: 4 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$crimson", width: 24 },
+      { color: "$white", width: 4 },
+      { color: "$crimson", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$bluebird", width: 8 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "joint-commendation",
+    name: "Joint Service Commendation Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$bluebird", width: 16 },
+      { color: "$white", width: 8 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$white", width: 8 },
+      { color: "$myrtle-green", width: 16 },
+      { color: "$white", width: 8 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$white", width: 8 },
+      { color: "$bluebird", width: 16 }
+    ],
+    authorizedDevices: ["olc", "st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "joint-achievement",
+    name: "Joint Service Achievement Medal",
+    branch: ALL_US,
+    // †Approximate — blue outer, green inner, red center
+    stripes: [
+      { color: "$old-glory-blue", width: 12 },
+      { color: "$white", width: 6 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$white", width: 6 },
+      { color: "$old-glory-red", width: 14 },
+      { color: "$white", width: 6 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$white", width: 6 },
+      { color: "$old-glory-blue", width: 12 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "joint-meritorious-unit",
+    name: "Joint Meritorious Unit Award",
+    branch: ALL_US,
+    stripes: [
+      { color: "$bluebird", width: 12 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$bluebird", width: 12 },
+      { color: "$white", width: 8 },
+      { color: "$crimson", width: 8 },
+      { color: "$white", width: 8 },
+      { color: "$bluebird", width: 12 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$bluebird", width: 12 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "gold"
+  },
+  // ─── SHARED PERSONAL DECORATIONS ─────────────────────────────────────────
+  {
+    id: "purple-heart",
+    name: "Purple Heart",
+    branch: ALL_US,
+    stripes: [
+      { color: "$white", width: 8 },
+      { color: "$purple-heart-purple", width: 72 },
+      { color: "$white", width: 8 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    // Same ribbon worn by all branches; devices differ by branch (see branch-specific entries)
+    id: "silver-star",
+    name: "Silver Star",
+    branch: ALL_US,
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 14 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 14 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "legion-of-merit",
+    name: "Legion of Merit",
+    branch: ALL_US,
+    stripes: [
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 20 },
+      { color: "$white", width: 1 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "distinguished-flying-cross",
+    name: "Distinguished Flying Cross",
+    branch: ALL_US,
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 3 },
+      { color: "$old-glory-red", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["olc", "st", "vd", "cd"],
+    frame: "none"
+  },
+  {
+    id: "bronze-star",
+    name: "Bronze Star Medal",
+    branch: ALL_US,
+    // Predominantly scarlet flanks; narrow ultramarine center (MIL-DTL-11589)
+    stripes: [
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 }
+    ],
+    authorizedDevices: ["olc", "st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "meritorious-service",
+    name: "Meritorious Service Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$crimson", width: 1 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 5 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 1 }
+    ],
+    authorizedDevices: ["olc", "st"],
+    frame: "none"
+  },
+  {
+    id: "air-medal",
+    name: "Air Medal",
+    branch: ALL_US,
+    // Ultramarine blue flanks; golden-orange stripes; ultramarine center
+    stripes: [
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 40 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 8 }
+    ],
+    authorizedDevices: ["olc", "st", "num"],
+    frame: "none"
+  },
+  {
+    id: "humanitarian-service",
+    name: "Humanitarian Service Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$purple-violet", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$bluebird", width: 20 },
+      { color: "$old-glory-blue", width: 16 },
+      { color: "$bluebird", width: 20 },
+      { color: "$white", width: 4 },
+      { color: "$purple-violet", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "pow-medal",
+    name: "Prisoner of War Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 6 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "#1A1A1A", width: 52 },
+      // Black center
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 6 },
+      { color: "$old-glory-red", width: 4 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "mfo-medal",
+    name: "Multinational Force and Observers Medal",
+    branch: ALL_US,
+    stripes: [
+      { color: "$persian-orange", width: 6 },
+      { color: "$primitive-green", width: 2 },
+      { color: "$white", width: 6 },
+      { color: "$primitive-green", width: 2 },
+      { color: "$persian-orange", width: 6 }
+    ],
+    authorizedDevices: ["num"],
+    frame: "none"
+  },
+  {
+    id: "armed-forces-service",
+    name: "Armed Forces Service Medal",
+    branch: ALL_US,
+    // Multiple green shades flanking a central bluebird blue †
+    stripes: [
+      { color: "$golden-yellow", width: 4 },
+      { color: "$primitive-green", width: 8 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$primitive-green", width: 8 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$bluebird", width: 16 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$primitive-green", width: 8 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$primitive-green", width: 8 },
+      { color: "$golden-yellow", width: 4 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "armed-forces-reserve",
+    name: "Armed Forces Reserve Medal",
+    branch: ALL_US,
+    // Alternating bluebird and chamois stripes (2-color design MIL-DTL-11589)
+    stripes: [
+      { color: "$bluebird", width: 4 },
+      { color: "$chamois", width: 2 },
+      { color: "$bluebird", width: 4 },
+      { color: "$chamois", width: 2 },
+      { color: "$bluebird", width: 4 },
+      { color: "$chamois", width: 24 },
+      { color: "$bluebird", width: 8 },
+      { color: "$chamois", width: 24 },
+      { color: "$bluebird", width: 4 },
+      { color: "$chamois", width: 2 },
+      { color: "$bluebird", width: 4 },
+      { color: "$chamois", width: 2 },
+      { color: "$bluebird", width: 4 }
+    ],
+    authorizedDevices: ["hg", "md", "num"],
+    frame: "none"
+  },
+  // ─── CAMPAIGN / SERVICE MEDALS (all branches) ─────────────────────────────
+  {
+    id: "national-defense-service",
+    name: "National Defense Service Medal",
+    branch: ALL_US,
+    // Scarlet edges | thin blue/white pinstripes | golden-yellow center (MIL-DTL-11589)
+    stripes: [
+      { color: "$scarlet", width: 14 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 1 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 14 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "armed-forces-expeditionary",
+    name: "Armed Forces Expeditionary Medal",
+    branch: ALL_US,
+    // Green/yellow/brown edges; blue/white/red center (MIL-DTL-11589) †
+    stripes: [
+      { color: "$primitive-green", width: 6 },
+      { color: "$golden-yellow", width: 6 },
+      { color: "$earth-brown", width: 6 },
+      { color: "$black", width: 6 },
+      { color: "$bluebird", width: 14 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$bluebird", width: 14 },
+      { color: "$black", width: 6 },
+      { color: "$earth-brown", width: 6 },
+      { color: "$golden-yellow", width: 6 },
+      { color: "$primitive-green", width: 6 }
+    ],
+    authorizedDevices: ["stc", "arr"],
+    frame: "none"
+  },
+  {
+    id: "gwot-expeditionary",
+    name: "Global War on Terrorism Expeditionary Medal",
+    branch: ALL_US,
+    // Dark blue dominant with golden and scarlet accents (MIL-DTL-11589) †
+    stripes: [
+      { color: "$bluebird", width: 10 },
+      { color: "$old-glory-blue", width: 6 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$bluebird", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$bluebird", width: 4 },
+      { color: "$scarlet", width: 12 },
+      { color: "$bluebird", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$bluebird", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 6 },
+      { color: "$bluebird", width: 10 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "gwot-service",
+    name: "Global War on Terrorism Service Medal",
+    branch: ALL_US,
+    // Old Glory Blue flanks | golden-yellow | scarlet | blue | white | blue(center) (MIL-DTL-11589)
+    stripes: [
+      { color: "$old-glory-blue", width: 10 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 20 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$scarlet", width: 8 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$old-glory-blue", width: 10 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "iraq-campaign",
+    name: "Iraq Campaign Medal",
+    branch: ALL_US,
+    // Scarlet | white | green | white | black | chamois(center) | black | white | green | white | scarlet
+    stripes: [
+      { color: "$scarlet", width: 10 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 2 },
+      { color: "$white", width: 4 },
+      { color: "$black", width: 10 },
+      { color: "$chamois", width: 28 },
+      { color: "$black", width: 10 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 2 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 10 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "afghanistan-campaign",
+    name: "Afghanistan Campaign Medal",
+    branch: ALL_US,
+    // Emerald | scarlet | black | white | red/white/blue center | white | black | scarlet | emerald
+    stripes: [
+      { color: "$myrtle-green", width: 5 },
+      { color: "$scarlet", width: 12 },
+      { color: "$black", width: 8 },
+      { color: "$white", width: 14 },
+      { color: "$old-glory-red", width: 2 },
+      { color: "$white", width: 2 },
+      { color: "$old-glory-blue", width: 2 },
+      { color: "$white", width: 14 },
+      { color: "$black", width: 8 },
+      { color: "$scarlet", width: 12 },
+      { color: "$myrtle-green", width: 5 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "inherent-resolve-campaign",
+    name: "Inherent Resolve Campaign Medal",
+    branch: ALL_US,
+    // Blue | teal | sand/tan | orange | sand/tan | teal | blue †
+    stripes: [
+      { color: "$old-glory-blue", width: 10 },
+      { color: "$bluebird", width: 8 },
+      { color: "$chamois", width: 12 },
+      { color: "$persian-orange", width: 28 },
+      { color: "$chamois", width: 12 },
+      { color: "$bluebird", width: 8 },
+      { color: "$old-glory-blue", width: 10 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "korean-service",
+    name: "Korean Service Medal",
+    branch: ALL_US,
+    // White edge | wide bluebird | white center | wide bluebird | white edge
+    stripes: [
+      { color: "$white", width: 2 },
+      { color: "$bluebird", width: 38 },
+      { color: "$white", width: 8 },
+      { color: "$bluebird", width: 38 },
+      { color: "$white", width: 2 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "korea-defense-service",
+    name: "Korea Defense Service Medal",
+    branch: ALL_US,
+    // Green | white | green | golden | blue center | golden | green | white | green †
+    stripes: [
+      { color: "$myrtle-green", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$bluebird", width: 24 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "vietnam-service",
+    name: "Vietnam Service Medal",
+    branch: ALL_US,
+    // Primitive green edges | air-force yellow with red pinstripes (MIL-DTL-11589)
+    stripes: [
+      { color: "$primitive-green", width: 8 },
+      { color: "$air-force-yellow", width: 20 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$air-force-yellow", width: 10 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$air-force-yellow", width: 10 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$air-force-yellow", width: 20 },
+      { color: "$primitive-green", width: 8 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "american-campaign",
+    name: "American Campaign Medal",
+    branch: ALL_US,
+    // Blue/white/black/white/blue | center US tricolor | blue/white/red/white/blue
+    stripes: [
+      { color: "$bluebird", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$black", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$bluebird", width: 12 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 8 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$bluebird", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$black", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$bluebird", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "eame-campaign",
+    name: "European-African-Middle Eastern Campaign Medal",
+    branch: ALL_US,
+    // Brown/irish-green/white/scarlet | center US tricolor | scarlet/white/black/white/brown
+    stripes: [
+      { color: "$earth-brown", width: 12 },
+      { color: "$irish-green", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$irish-green", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 8 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$irish-green", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$black", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$earth-brown", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "asiatic-pacific-campaign",
+    name: "Asiatic-Pacific Campaign Medal",
+    branch: ALL_US,
+    // Air-force yellow flanks with white/red pinstripes | US tricolor center
+    stripes: [
+      { color: "$air-force-yellow", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$air-force-yellow", width: 12 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 8 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$air-force-yellow", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$air-force-yellow", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "wwii-victory",
+    name: "World War II Victory Medal",
+    branch: ALL_US,
+    // Rainbow flanks | white pinstripes | wide old-glory-red center
+    stripes: [
+      { color: "$bluebird", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$persian-orange", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 2 },
+      { color: "$old-glory-red", width: 36 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 4 },
+      { color: "$persian-orange", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$bluebird", width: 4 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "southwest-asia-service",
+    name: "Southwest Asia Service Medal",
+    branch: ALL_US,
+    // Desert-themed: black | chamois | blue/white/red | chamois | green | black (Desert Storm)
+    stripes: [
+      { color: "$black", width: 4 },
+      { color: "$chamois", width: 8 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$chamois", width: 12 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$black", width: 4 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$chamois", width: 12 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$chamois", width: 8 },
+      { color: "$black", width: 4 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "nato-medal",
+    name: "NATO Medal",
+    branch: [...ALL_US, "nato"],
+    // Imperial blue | white | wide imperial blue | white | imperial blue (MIL-DTL-11589)
+    stripes: [
+      { color: "$imperial-blue", width: 5 },
+      { color: "$white", width: 2 },
+      { color: "$imperial-blue", width: 13 },
+      { color: "$white", width: 2 },
+      { color: "$imperial-blue", width: 5 }
+    ],
+    authorizedDevices: ["clsp"],
+    frame: "none"
+  },
+  {
+    id: "un-medal",
+    name: "United Nations Medal",
+    branch: [...ALL_US, "un"],
+    // UN blue with thin white pinstripes
+    stripes: [
+      { color: "$bluebird", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$bluebird", width: 12 },
+      { color: "$white", width: 1 },
+      { color: "$bluebird", width: 2 }
+    ],
+    authorizedDevices: ["clsp"],
+    frame: "none"
+  }
+];
+
+// src/data/ribbons/us-army.ts
+var ARMY_RIBBONS = [
+  // ─── PERSONAL DECORATIONS ─────────────────────────────────────────────────
+  {
+    id: "army-moh",
+    name: "Medal of Honor (Army)",
+    branch: ["us-army"],
+    // Old Glory Red | white | ultramarine blue (wide center) | white | Old Glory Red
+    stripes: [
+      { color: "$old-glory-red", width: 8 },
+      { color: "$white", width: 8 },
+      { color: "$ultramarine-blue", width: 48 },
+      { color: "$white", width: 8 },
+      { color: "$old-glory-red", width: 8 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "army-dsc",
+    name: "Distinguished Service Cross",
+    branch: ["us-army"],
+    // Blue outer | white pinstripes | wide blue inner | scarlet center
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 28 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 28 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-dsm",
+    name: "Distinguished Service Medal",
+    branch: ["us-army"],
+    // Wide scarlet flanks | blue pinstripe | white center
+    stripes: [
+      { color: "$scarlet", width: 20 },
+      { color: "$ultramarine-blue", width: 4 },
+      { color: "$white", width: 40 },
+      { color: "$ultramarine-blue", width: 4 },
+      { color: "$scarlet", width: 20 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-ss",
+    name: "Silver Star (Army)",
     branch: ["us-army"],
     stripes: [
-      { color: "$imperial-blue", width: 14 }
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 14 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 14 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 6 }
     ],
-    authorizedDevices: ["stcb", "stcs"],
-    frame: "gold"
+    authorizedDevices: ["olc", "vd"],
+    frame: "none"
+  },
+  {
+    id: "army-lom",
+    name: "Legion of Merit (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 20 },
+      { color: "$white", width: 1 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-dfc",
+    name: "Distinguished Flying Cross (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 3 },
+      { color: "$old-glory-red", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["olc", "vd"],
+    frame: "none"
+  },
+  {
+    id: "army-sm",
+    name: "Soldier's Medal",
+    branch: ["us-army"],
+    // Blue outer | alternating red/white/blue center
+    stripes: [
+      { color: "$ultramarine-blue", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$ultramarine-blue", width: 12 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-bsm",
+    name: "Bronze Star Medal (Army)",
+    branch: ["us-army"],
+    // MIL-DTL-11589: white(1/32) | scarlet(9/16) | white(1/32) | ub(1/8) | white(1/32) | scarlet(9/16) | white(1/32)
+    stripes: [
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 }
+    ],
+    authorizedDevices: ["olc", "vd"],
+    frame: "none"
   },
   {
     id: "army-ph",
     name: "Purple Heart",
     branch: ["us-army"],
     stripes: [
-      { color: "$scarlet", width: 1 },
-      { color: "#4B2D7F", width: 5 },
-      // purple
-      { color: "$scarlet", width: 1 }
+      { color: "$white", width: 8 },
+      { color: "$purple-heart-purple", width: 72 },
+      { color: "$white", width: 8 }
     ],
-    authorizedDevices: ["olcb", "olcs"],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-msm",
+    name: "Meritorious Service Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$crimson", width: 1 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 5 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 1 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-am",
+    name: "Air Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 40 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 8 }
+    ],
+    authorizedDevices: ["olc", "num"],
     frame: "none"
   },
   {
     id: "army-arcom",
     name: "Army Commendation Medal",
     branch: ["us-army"],
+    // White outer | myrtle green segmented stripes | white center-ish
     stripes: [
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$myrtle-green", width: 5 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 1 },
-      { color: "#FFFFFF", width: 1 }
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$white", width: 2 },
+      { color: "$myrtle-green", width: 3 },
+      { color: "$white", width: 2 },
+      { color: "$myrtle-green", width: 3 },
+      { color: "$white", width: 2 },
+      { color: "$myrtle-green", width: 3 },
+      { color: "$white", width: 2 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$white", width: 4 }
     ],
-    authorizedDevices: ["olcb", "olcs", "vd"],
+    authorizedDevices: ["olc", "vd"],
     frame: "none"
   },
+  {
+    id: "army-arcam",
+    name: "Army Reserve Components Achievement Medal",
+    branch: ["us-army"],
+    // Myrtle green outer | golden-yellow | white | green center | white | golden-yellow | green outer
+    stripes: [
+      { color: "$myrtle-green", width: 14 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 44 },
+      { color: "$white", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$myrtle-green", width: 14 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  {
+    id: "army-aam",
+    name: "Army Achievement Medal",
+    branch: ["us-army"],
+    // Green | white | green | white | blue center | white | green | white | green †
+    stripes: [
+      { color: "$myrtle-green", width: 8 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$ultramarine-blue", width: 36 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 8 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "none"
+  },
+  // ─── CONDUCT & SERVICE RIBBONS ───────────────────────────────────────────
   {
     id: "army-gcm",
     name: "Army Good Conduct Medal",
     branch: ["us-army"],
+    // Predominantly scarlet with thin white pinstripes
     stripes: [
-      { color: "$scarlet", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 9 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 1 }
+      { color: "$scarlet", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 2 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 2 }
     ],
-    authorizedDevices: ["kntb", "num"],
+    authorizedDevices: ["knt"],
     frame: "none"
   },
   {
-    id: "army-ndsm",
-    name: "National Defense Service Medal",
-    branch: ["us-army", "us-navy", "us-usmc", "us-af", "us-ssf", "us-uscg"],
+    id: "army-asr",
+    name: "Army Service Ribbon",
+    branch: ["us-army"],
+    // Rainbow: scarlet | orange | golden-yellow | myrtle-green | blue | myrtle-green | golden-yellow | orange | scarlet
     stripes: [
-      { color: "$old-glory-red", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$imperial-blue", width: 1 },
-      { color: "#C5A028", width: 3 },
-      // gold
-      { color: "$imperial-blue", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$old-glory-red", width: 1 }
-    ],
-    authorizedDevices: ["stcb", "stcs"],
-    frame: "none"
-  },
-  {
-    id: "army-gwots",
-    name: "Global War on Terrorism Service Medal",
-    branch: ["us-army", "us-navy", "us-usmc", "us-af", "us-ssf", "us-uscg"],
-    stripes: [
-      { color: "$imperial-blue", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$old-glory-red", width: 5 },
-      { color: "$imperial-blue", width: 1 },
-      { color: "#C5A028", width: 3 },
-      { color: "$imperial-blue", width: 1 },
-      { color: "$old-glory-red", width: 5 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$imperial-blue", width: 1 }
+      { color: "$scarlet", width: 14 },
+      { color: "$persian-orange", width: 10 },
+      { color: "$golden-yellow", width: 6 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$ultramarine-blue", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "$golden-yellow", width: 6 },
+      { color: "$persian-orange", width: 10 },
+      { color: "$scarlet", width: 14 }
     ],
     authorizedDevices: [],
     frame: "none"
   },
   {
-    id: "army-msm",
-    name: "Meritorious Service Medal",
+    id: "army-osr",
+    name: "Overseas Service Ribbon",
     branch: ["us-army"],
+    // Old glory blue | grotto blue | golden yellow | old glory red | golden yellow | grotto blue | old glory blue †
     stripes: [
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "#4B2D7F", width: 7 },
-      // purple
-      { color: "#FFFFFF", width: 1 },
-      { color: "$scarlet", width: 1 },
-      { color: "#FFFFFF", width: 1 }
+      { color: "$old-glory-blue", width: 12 },
+      { color: "$grotto-blue", width: 16 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$old-glory-red", width: 24 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$grotto-blue", width: 16 },
+      { color: "$old-glory-blue", width: 12 }
     ],
-    authorizedDevices: ["olcb", "olcs"],
+    authorizedDevices: ["num"],
     frame: "none"
   },
   {
     id: "army-afrm",
-    name: "Armed Forces Reserve Medal",
+    name: "Armed Forces Reserve Medal (Army)",
     branch: ["us-army"],
     stripes: [
       { color: "$old-glory-red", width: 2 },
-      { color: "#FFFFFF", width: 1 },
+      { color: "$white", width: 1 },
       { color: "$imperial-blue", width: 1 },
-      { color: "#FFFFFF", width: 1 },
+      { color: "$white", width: 1 },
       { color: "$old-glory-red", width: 1 },
       { color: "$imperial-blue", width: 1 },
-      { color: "#FFFFFF", width: 1 },
+      { color: "$white", width: 1 },
       { color: "$old-glory-red", width: 1 },
       { color: "$imperial-blue", width: 1 },
-      { color: "#FFFFFF", width: 1 },
+      { color: "$white", width: 1 },
       { color: "$old-glory-red", width: 2 }
     ],
-    authorizedDevices: ["hgb", "hgs", "hgg", "md"],
+    authorizedDevices: ["hg", "md"],
     frame: "none"
   },
-  // ─── Navy ──────────────────────────────────────────────────────────────────
+  {
+    id: "army-ndsm",
+    name: "National Defense Service Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$scarlet", width: 14 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 1 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 14 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "army-gwots",
+    name: "Global War on Terrorism Service Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$old-glory-blue", width: 10 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 20 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$scarlet", width: 8 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$old-glory-blue", width: 10 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "army-icm",
+    name: "Iraq Campaign Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$scarlet", width: 10 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 2 },
+      { color: "$white", width: 4 },
+      { color: "$black", width: 10 },
+      { color: "$chamois", width: 28 },
+      { color: "$black", width: 10 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 2 },
+      { color: "$white", width: 4 },
+      { color: "$scarlet", width: 10 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "army-swasm",
+    name: "Southwest Asia Service Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$black", width: 4 },
+      { color: "$chamois", width: 8 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$chamois", width: 12 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$black", width: 4 },
+      { color: "$myrtle-green", width: 6 },
+      { color: "$chamois", width: 12 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 4 },
+      { color: "$old-glory-blue", width: 4 },
+      { color: "$chamois", width: 8 },
+      { color: "$black", width: 4 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "army-mfo",
+    name: "Multinational Force and Observers Medal (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$persian-orange", width: 6 },
+      { color: "$primitive-green", width: 2 },
+      { color: "$white", width: 6 },
+      { color: "$primitive-green", width: 2 },
+      { color: "$persian-orange", width: 6 }
+    ],
+    authorizedDevices: ["num"],
+    frame: "none"
+  },
+  // ─── UNIT AWARDS ──────────────────────────────────────────────────────────
+  {
+    id: "army-puc",
+    name: "Presidential Unit Citation (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$imperial-blue", width: 14 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "gold"
+  },
+  {
+    id: "army-vua",
+    name: "Valorous Unit Award",
+    branch: ["us-army"],
+    // Old glory red | ultramarine blue | white | blue segments | red
+    stripes: [
+      { color: "$old-glory-red", width: 12 },
+      { color: "$ultramarine-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$ultramarine-blue", width: 3 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 3 },
+      { color: "$white", width: 1 },
+      { color: "$ultramarine-blue", width: 1 },
+      { color: "$old-glory-red", width: 12 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "gold"
+  },
+  {
+    id: "army-muc",
+    name: "Army Meritorious Unit Commendation",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$scarlet", width: 14 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "gold"
+  },
+  {
+    id: "army-jmua",
+    name: "Joint Meritorious Unit Award (Army)",
+    branch: ["us-army"],
+    stripes: [
+      { color: "$bluebird", width: 12 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$bluebird", width: 12 },
+      { color: "$white", width: 8 },
+      { color: "$crimson", width: 8 },
+      { color: "$white", width: 8 },
+      { color: "$bluebird", width: 12 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$bluebird", width: 12 }
+    ],
+    authorizedDevices: ["olc"],
+    frame: "gold"
+  }
+];
+
+// src/data/ribbons/us-navy.ts
+var NAVY_RIBBONS = [
+  // ─── PERSONAL DECORATIONS ─────────────────────────────────────────────────
+  {
+    id: "navy-moh",
+    name: "Medal of Honor (Navy)",
+    branch: ["us-navy", "us-usmc"],
+    // Light blue (sky blue) ribbon — solid field representing the sea/sky
+    stripes: [
+      { color: "$sky-blue", width: 88 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "navy-cross",
+    name: "Navy Cross",
+    branch: ["us-navy", "us-usmc"],
+    // Navy blue wide flanks | white center stripe
+    stripes: [
+      { color: "$navy-blue", width: 36 },
+      { color: "$white", width: 16 },
+      { color: "$navy-blue", width: 36 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-dsm",
+    name: "Navy Distinguished Service Medal",
+    branch: ["us-navy", "us-usmc"],
+    // Navy blue outer | wide golden-yellow center
+    stripes: [
+      { color: "$navy-blue", width: 16 },
+      { color: "$golden-yellow", width: 56 },
+      { color: "$navy-blue", width: 16 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "none"
+  },
+  {
+    id: "navy-ss",
+    name: "Silver Star (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 14 },
+      { color: "$old-glory-red", width: 4 },
+      { color: "$white", width: 14 },
+      { color: "$ultramarine-blue", width: 14 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-lom",
+    name: "Legion of Merit (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$white", width: 1 },
+      { color: "$crimson", width: 20 },
+      { color: "$white", width: 1 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-dfc",
+    name: "Distinguished Flying Cross (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$ultramarine-blue", width: 6 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 3 },
+      { color: "$old-glory-red", width: 6 },
+      { color: "$white", width: 3 },
+      { color: "$ultramarine-blue", width: 11 },
+      { color: "$white", width: 9 },
+      { color: "$ultramarine-blue", width: 6 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-marine-corps-medal",
+    name: "Navy and Marine Corps Medal",
+    branch: ["us-navy", "us-usmc"],
+    // Navy blue | golden-yellow | scarlet (three equal sections)
+    stripes: [
+      { color: "$navy-blue", width: 29 },
+      { color: "$golden-yellow", width: 30 },
+      { color: "$scarlet", width: 29 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "none"
+  },
+  {
+    id: "navy-bsm",
+    name: "Bronze Star Medal (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 },
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 18 },
+      { color: "$white", width: 2 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-ph",
+    name: "Purple Heart (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$white", width: 8 },
+      { color: "$purple-heart-purple", width: 72 },
+      { color: "$white", width: 8 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "none"
+  },
+  {
+    id: "navy-msm",
+    name: "Meritorious Service Medal (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$crimson", width: 1 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 5 },
+      { color: "$white", width: 2 },
+      { color: "$crimson", width: 1 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "none"
+  },
+  {
+    id: "navy-am",
+    name: "Air Medal (Navy/USMC)",
+    branch: ["us-navy", "us-usmc"],
+    stripes: [
+      { color: "$ultramarine-blue", width: 8 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 40 },
+      { color: "$golden-orange", width: 16 },
+      { color: "$ultramarine-blue", width: 8 }
+    ],
+    authorizedDevices: ["st", "num", "vd"],
+    frame: "none"
+  },
+  {
+    id: "navy-commendation",
+    name: "Navy and Marine Corps Commendation Medal",
+    branch: ["us-navy", "us-usmc"],
+    // Myrtle green with narrow white pinstripes inside each edge
+    stripes: [
+      { color: "$myrtle-green", width: 12 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 52 },
+      { color: "$white", width: 4 },
+      { color: "$myrtle-green", width: 12 }
+    ],
+    authorizedDevices: ["st", "vd"],
+    frame: "none"
+  },
   {
     id: "navy-achievement",
     name: "Navy and Marine Corps Achievement Medal",
     branch: ["us-navy", "us-usmc"],
+    // Myrtle green with thin golden-orange accents †
     stripes: [
-      { color: "#000080", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "#000080", width: 2 },
-      { color: "#C5A028", width: 5 },
-      // gold center
-      { color: "#000080", width: 2 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "#000080", width: 1 }
+      { color: "$myrtle-green", width: 8 },
+      { color: "$golden-orange", width: 4 },
+      { color: "$myrtle-green", width: 56 },
+      { color: "$golden-orange", width: 4 },
+      { color: "$myrtle-green", width: 8 }
     ],
-    authorizedDevices: ["stg", "sts", "vd"],
+    authorizedDevices: ["st"],
     frame: "none"
   },
-  // ─── Air Force ─────────────────────────────────────────────────────────────
+  // ─── UNIT AWARDS ──────────────────────────────────────────────────────────
   {
-    id: "af-dfc",
-    name: "Distinguished Flying Cross",
-    branch: ["us-af", "us-army"],
+    id: "navy-puc",
+    name: "Navy Presidential Unit Citation",
+    branch: ["us-navy", "us-usmc"],
+    // Old glory red | golden-yellow | navy blue (bottom-to-top when worn vertically)
+    // On the ribbon bar, displayed left-to-right as: red | gold | blue
     stripes: [
-      { color: "#FFFFFF", width: 1 },
-      { color: "$old-glory-red", width: 1 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$imperial-blue", width: 5 },
-      { color: "#FFFFFF", width: 1 },
-      { color: "$old-glory-red", width: 1 },
-      { color: "#FFFFFF", width: 1 }
+      { color: "$old-glory-red", width: 29 },
+      { color: "$golden-yellow", width: 30 },
+      { color: "$navy-blue", width: 29 }
     ],
-    authorizedDevices: ["olcb", "olcs", "stg", "sts", "vd", "cd"],
+    authorizedDevices: ["st"],
+    frame: "gold"
+  },
+  {
+    id: "navy-nuc",
+    name: "Navy Unit Commendation",
+    branch: ["us-navy", "us-usmc"],
+    // Navy blue | golden-yellow | scarlet | myrtle green | red | gold | blue
+    stripes: [
+      { color: "$navy-blue", width: 12 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$myrtle-green", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$navy-blue", width: 12 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "gold"
+  },
+  {
+    id: "navy-muc",
+    name: "Navy Meritorious Unit Commendation",
+    branch: ["us-navy", "us-usmc"],
+    // Myrtle green flanks | dark blue | scarlet | blue | golden yellow
+    stripes: [
+      { color: "$myrtle-green", width: 16 },
+      { color: "$navy-blue", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 8 },
+      { color: "$navy-blue", width: 8 },
+      { color: "$myrtle-green", width: 16 }
+    ],
+    authorizedDevices: ["st"],
+    frame: "gold"
+  },
+  {
+    id: "navy-e",
+    name: 'Navy "E" Ribbon',
+    branch: ["us-navy"],
+    // Gold | white | navy blue center
+    stripes: [
+      { color: "$golden-yellow", width: 6 },
+      { color: "$white", width: 16 },
+      { color: "$navy-blue", width: 44 },
+      { color: "$white", width: 16 },
+      { color: "$golden-yellow", width: 6 }
+    ],
+    authorizedDevices: [],
     frame: "none"
   },
-  // ─── NATO / International ───────────────────────────────────────────────────
+  // ─── CONDUCT / GOOD CONDUCT ───────────────────────────────────────────────
   {
-    id: "nato-medal",
-    name: "NATO Medal",
-    branch: ["us-army", "us-navy", "us-usmc", "us-af", "us-uscg", "nato"],
+    id: "navy-gcm",
+    name: "Navy Good Conduct Medal",
+    branch: ["us-navy"],
+    // Predominantly scarlet/red ribbon
     stripes: [
-      { color: "$imperial-blue", width: 5 },
-      { color: "#FFFFFF", width: 2 },
-      { color: "$imperial-blue", width: 13 },
-      { color: "#FFFFFF", width: 2 },
-      { color: "$imperial-blue", width: 5 }
+      { color: "$scarlet", width: 88 }
     ],
-    authorizedDevices: ["clsp"],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  // ─── SERVICE RIBBONS ──────────────────────────────────────────────────────
+  {
+    id: "navy-expeditionary",
+    name: "Navy Expeditionary Medal",
+    branch: ["us-navy"],
+    // Ultramarine blue flanks | golden-yellow stripe | ultramarine blue center
+    stripes: [
+      { color: "$ultramarine-blue", width: 12 },
+      { color: "$golden-yellow", width: 16 },
+      { color: "$ultramarine-blue", width: 36 },
+      { color: "$golden-yellow", width: 16 },
+      { color: "$ultramarine-blue", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "navy-sea-service-deployment",
+    name: "Sea Service Deployment Ribbon",
+    branch: ["us-navy", "us-usmc"],
+    // Navy blue | red/yellow/teal accents | teal/aqua center †
+    stripes: [
+      { color: "$navy-blue", width: 12 },
+      { color: "$scarlet", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$myrtle-green", width: 4 },
+      { color: "#00CED1", width: 36 },
+      // dark turquoise/sea color
+      { color: "$myrtle-green", width: 4 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$scarlet", width: 4 },
+      { color: "$navy-blue", width: 12 }
+    ],
+    authorizedDevices: ["stc"],
+    frame: "none"
+  },
+  {
+    id: "navy-arctic-service",
+    name: "Navy Arctic Service Ribbon",
+    branch: ["us-navy"],
+    // Shades of blue flanking a white center, representing arctic ice and sea †
+    stripes: [
+      { color: "$bluebird", width: 20 },
+      { color: "$sky-blue", width: 4 },
+      { color: "$white", width: 8 },
+      { color: "$sky-blue", width: 2 },
+      { color: "$bluebird", width: 2 },
+      { color: "$navy-blue", width: 4 },
+      { color: "$bluebird", width: 2 },
+      { color: "$sky-blue", width: 2 },
+      { color: "$white", width: 8 },
+      { color: "$sky-blue", width: 4 },
+      { color: "$bluebird", width: 20 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "navy-overseas-service",
+    name: "Navy and Marine Corps Overseas Service Ribbon",
+    branch: ["us-navy", "us-usmc"],
+    // Teal/blue | golden accent | dark blue | golden yellow | red center †
+    stripes: [
+      { color: "#008080", width: 10 },
+      // teal
+      { color: "$golden-yellow", width: 4 },
+      { color: "$navy-blue", width: 16 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$old-glory-red", width: 20 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$navy-blue", width: 16 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "#008080", width: 10 }
+    ],
+    authorizedDevices: [],
+    frame: "none"
+  },
+  {
+    id: "navy-ndsm",
+    name: "National Defense Service Medal (Navy)",
+    branch: ["us-navy"],
+    stripes: [
+      { color: "$scarlet", width: 14 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 1 },
+      { color: "$golden-yellow", width: 8 },
+      { color: "$scarlet", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$old-glory-blue", width: 1 },
+      { color: "$white", width: 1 },
+      { color: "$scarlet", width: 14 }
+    ],
+    authorizedDevices: ["stc"],
     frame: "none"
   }
+];
+
+// src/data/ribbons/index.ts
+var ALL_RIBBONS = [
+  ...US_JOINT_RIBBONS,
+  ...ARMY_RIBBONS,
+  ...NAVY_RIBBONS
 ];
 
 // src/registry.ts
@@ -538,7 +1852,7 @@ function resolveStripeColor(color) {
 var _defaultRegistry = null;
 function getDefaultRegistry() {
   if (!_defaultRegistry) {
-    _defaultRegistry = loadRegistry(STUB_RIBBONS);
+    _defaultRegistry = loadRegistry(ALL_RIBBONS);
   }
   return _defaultRegistry;
 }
@@ -1009,6 +2323,6 @@ function renderSpec(spec, options) {
   return renderLayout(rack, options);
 }
 
-export { PALETTE, RackSpecParseError, STUB_RIBBONS, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderSpec as render, renderLayout, renderSpec, resolveSlug };
+export { ALL_RIBBONS, PALETTE, RackSpecParseError, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderSpec as render, renderLayout, renderSpec, resolveSlug };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

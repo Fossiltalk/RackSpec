@@ -221,6 +221,24 @@ export const ARMY_RIBBONS: RegistryEntry[] = [
   },
 
   {
+    id: 'army-arcam',
+    name: 'Army Reserve Components Achievement Medal',
+    branch: ['us-army'],
+    // Myrtle green outer | golden-yellow | white | green center | white | golden-yellow | green outer
+    stripes: [
+      { color: '$myrtle-green',  width: 14 },
+      { color: '$golden-yellow', width:  4 },
+      { color: '$white',         width:  4 },
+      { color: '$myrtle-green',  width: 44 },
+      { color: '$white',         width:  4 },
+      { color: '$golden-yellow', width:  4 },
+      { color: '$myrtle-green',  width: 14 },
+    ],
+    authorizedDevices: ['olc'],
+    frame: 'none',
+  },
+
+  {
     id: 'army-aam',
     name: 'Army Achievement Medal',
     branch: ['us-army'],

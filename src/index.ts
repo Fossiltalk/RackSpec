@@ -1,7 +1,7 @@
 export { parse } from './parser.js';
 export { renderLayout } from './renderer.js';
 export { loadRegistry, mergeRegistry, resolveSlug, getDefaultRegistry } from './registry.js';
-export { STUB_RIBBONS } from './data/ribbons.js';
+export { ALL_RIBBONS } from './data/ribbons/index.js';
 export { PALETTE } from './data/palette.js';
 
 export type {

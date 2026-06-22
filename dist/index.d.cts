@@ -93,12 +93,7 @@ declare function mergeRegistry(base: Registry, overrides: RegistryEntry[]): Regi
 declare function resolveSlug(registry: Registry, id: string): RegistryEntry | null;
 declare function getDefaultRegistry(): Registry;
 
-/**
- * Stub ribbon registry.
- * Stripe definitions are proportional widths with approximate colors.
- * These 12 entries cover all spec §18 examples needed for integration tests.
- */
-declare const STUB_RIBBONS: RegistryEntry[];
+declare const ALL_RIBBONS: RegistryEntry[];
 
 /**
  * Named color palette (§13.3).
@@ -121,4 +116,4 @@ declare const PALETTE: Record<string, string>;
  */
 declare function renderSpec(spec: string, options?: RenderOptions): string;
 
-export { type Decoration, type DeviceToken, type FlagToken, type Header, type InlineStripeRef, PALETTE, type ParseError, type ParseErrorCode, type RackSpec, RackSpecParseError, type RegistryEntry, type RegistryStripe, type RenderOptions, type RibbonRef, type RibbonToken, type Row, STUB_RIBBONS, type SlugRef, type Stripe, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderSpec as render, renderLayout, renderSpec, resolveSlug };
+export { ALL_RIBBONS, type Decoration, type DeviceToken, type FlagToken, type Header, type InlineStripeRef, PALETTE, type ParseError, type ParseErrorCode, type RackSpec, RackSpecParseError, type RegistryEntry, type RegistryStripe, type RenderOptions, type RibbonRef, type RibbonToken, type Row, type SlugRef, type Stripe, getDefaultRegistry, loadRegistry, mergeRegistry, parse, renderSpec as render, renderLayout, renderSpec, resolveSlug };

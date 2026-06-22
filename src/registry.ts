@@ -1,5 +1,5 @@
 import type { RegistryEntry } from './types.js';
-import { STUB_RIBBONS } from './data/ribbons.js';
+import { ALL_RIBBONS } from './data/ribbons/index.js';
 import { PALETTE } from './data/palette.js';
 
 export interface Registry {
@@ -63,7 +63,7 @@ let _defaultRegistry: Registry | null = null;
 
 export function getDefaultRegistry(): Registry {
   if (!_defaultRegistry) {
-    _defaultRegistry = loadRegistry(STUB_RIBBONS);
+    _defaultRegistry = loadRegistry(ALL_RIBBONS);
   }
   return _defaultRegistry;
 }

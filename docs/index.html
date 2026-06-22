@@ -8,17 +8,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d1117;
-      --surface:  #161b22;
-      --border:   #30363d;
-      --text:     #e6edf3;
-      --muted:    #8b949e;
-      --accent:   #388bfd;
-      --error-bg: #3d1a1a;
-      --error:    #f85149;
-      --success:  #3fb950;
-      --radius:   6px;
-      --mono:     'JetBrains Mono', 'Fira Mono', 'Cascadia Code', ui-monospace, monospace;
+      --bg:         #0d1117;
+      --surface:    #161b22;
+      --border:     #30363d;
+      --text:       #e6edf3;
+      --muted:      #8b949e;
+      --accent:     #388bfd;
+      --error-bg:   #3d1a1a;
+      --error:      #f85149;
+      --success:    #3fb950;
+      --radius:     6px;
+      --mono:       'JetBrains Mono', 'Fira Mono', 'Cascadia Code', ui-monospace, monospace;
+      --header-h:   53px;
+      --tab-h:      41px;
     }
 
     body {
@@ -27,36 +29,59 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 14px;
       line-height: 1.6;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
+    /* ── Header ── */
     header {
       border-bottom: 1px solid var(--border);
       padding: 16px 24px;
       display: flex;
       align-items: baseline;
       gap: 16px;
+      flex-shrink: 0;
     }
 
-    header h1 {
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+    header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+    header span { color: var(--muted); font-size: 12px; }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0;
+      padding: 0 16px;
+      flex-shrink: 0;
     }
 
-    header span {
+    .tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
       color: var(--muted);
-      font-size: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 10px 14px;
+      transition: color 0.1s, border-color 0.1s;
     }
 
-    main {
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+    /* ── Tab content wrapper ── */
+    .tab-content {
       flex: 1;
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      grid-template-rows: 1fr;
-      height: calc(100vh - 53px);
+      overflow: hidden;
+      display: none;
+    }
+    .tab-content.active { display: flex; flex-direction: column; }
+
+    /* ── Editor tab ── */
+    #tab-editor {
+      flex-direction: row;
     }
 
     .panel {
@@ -64,6 +89,8 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      width: 400px;
+      flex-shrink: 0;
     }
 
     .panel-header {
@@ -112,10 +139,7 @@
       text-overflow: ellipsis;
     }
 
-    .example-btn:hover {
-      background: var(--surface);
-      border-color: var(--accent);
-    }
+    .example-btn:hover { background: var(--surface); border-color: var(--accent); }
 
     textarea {
       flex: 1;
@@ -134,6 +158,7 @@
     textarea::placeholder { color: var(--muted); }
 
     .output-panel {
+      flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -153,12 +178,7 @@
       gap: 8px;
     }
 
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-    }
+    .status { display: flex; align-items: center; gap: 6px; font-size: 11px; }
 
     .status-dot {
       width: 6px;
@@ -166,7 +186,6 @@
       border-radius: 50%;
       background: var(--muted);
     }
-
     .status-dot.ok  { background: var(--success); }
     .status-dot.err { background: var(--error); }
 
@@ -180,7 +199,6 @@
       padding: 3px 8px;
       transition: color 0.1s, border-color 0.1s;
     }
-
     .copy-btn:hover { color: var(--text); border-color: var(--muted); }
     .copy-btn:disabled { opacity: 0.4; cursor: default; }
 
@@ -192,17 +210,9 @@
       align-items: flex-start;
       justify-content: center;
     }
+    .output-scroll.empty { align-items: center; justify-content: center; }
 
-    .output-scroll.empty {
-      align-items: center;
-      justify-content: center;
-    }
-
-    .placeholder-text {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
+    .placeholder-text { color: var(--muted); font-size: 13px; text-align: center; }
 
     .error-box {
       background: var(--error-bg);
@@ -218,12 +228,8 @@
       word-break: break-word;
     }
 
-    #svg-output svg {
-      display: block;
-      max-width: 100%;
-    }
+    #svg-output svg { display: block; max-width: 100%; }
 
-    /* checkerboard behind SVG so transparency is visible */
     #svg-output {
       background:
         repeating-conic-gradient(#1e2430 0% 25%, #252c3a 0% 50%)
@@ -231,6 +237,130 @@
       border-radius: var(--radius);
       padding: 24px;
     }
+
+    /* ── Reference Racks tab ── */
+    #tab-reference {
+      overflow-y: auto;
+      padding: 32px;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .ref-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ref-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ref-card + .ref-card { margin-top: 32px; }
+
+    .ref-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ref-card-header h2 { font-size: 15px; font-weight: 600; }
+
+    .ref-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ref-meta a { color: var(--accent); text-decoration: none; }
+    .ref-meta a:hover { text-decoration: underline; }
+
+    .ref-card-body { padding: 20px; }
+
+    .ref-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .ref-compare.no-photo {
+      grid-template-columns: 1fr;
+    }
+
+    .ref-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ref-col-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .ref-photo img {
+      max-width: 100%;
+      border-radius: var(--radius);
+      display: block;
+    }
+
+    .ref-svg-wrap {
+      background:
+        repeating-conic-gradient(#1e2430 0% 25%, #252c3a 0% 50%)
+        0 0 / 16px 16px;
+      border-radius: var(--radius);
+      padding: 16px;
+      display: inline-block;
+    }
+
+    .ref-svg-wrap svg { display: block; max-width: 100%; }
+
+    .ref-footer {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ref-note {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .load-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 5px 12px;
+      transition: border-color 0.1s, background 0.1s;
+      flex-shrink: 0;
+    }
+    .load-btn:hover { background: var(--bg); border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -240,11 +370,15 @@
   <span>military ribbon rack renderer</span>
 </header>
 
-<main>
+<nav class="tab-bar">
+  <button class="tab active" data-tab="editor">DSL Editor</button>
+  <button class="tab" data-tab="reference">Reference Racks</button>
+</nav>
+
+<!-- ── DSL Editor tab ── -->
+<div id="tab-editor" class="tab-content active">
   <div class="panel">
-    <div class="panel-header">
-      <span>DSL Input</span>
-    </div>
+    <div class="panel-header"><span>DSL Input</span></div>
 
     <div class="examples">
       <div class="examples-label">Examples</div>
@@ -279,19 +413,103 @@
       <div class="error-box" id="error-box" style="display:none"></div>
     </div>
   </div>
-</main>
+</div>
+
+<!-- ── Reference Racks tab ── -->
+<div id="tab-reference" class="tab-content">
+  <p class="ref-section-title">Known-good ribbon racks — rendered output vs. reference photo</p>
+
+  <!-- McChrystal -->
+  <div class="ref-card">
+    <div class="ref-card-header">
+      <h2>GEN Stanley A. McChrystal — US Army (2010)</h2>
+      <div class="ref-meta">
+        <span>22 decorations · rw:4</span>
+        <a href="https://en.wikipedia.org/wiki/Stanley_A._McChrystal" target="_blank" rel="noopener">Wikipedia</a>
+        <span>Note: Kuwait Liberation Medals not yet in registry</span>
+      </div>
+    </div>
+    <div class="ref-card-body">
+      <div class="ref-compare no-photo">
+        <div class="ref-col">
+          <div class="ref-col-label">Rendered (20 of 22 ribbons)</div>
+          <div class="ref-svg-wrap" id="mcchystal-svg"></div>
+        </div>
+      </div>
+      <div class="ref-footer">
+        <span class="ref-note">Gray bars = ribbons not yet defined in the registry. Devices are approximate based on award counts from public sources.</span>
+        <button class="load-btn" data-spec="rack/v1;br:us-army;ut:service;rw:4;defense-distinguished-service~olcb1,army-dsm,defense-superior-service~olcb1,army-lom~olcb2|army-bsm~vd,defense-meritorious-service,army-msm~olcb3,army-arcom~vd.olcb1|army-aam,national-defense-service~stcb1,armed-forces-expeditionary,army-swasm~stcb2|afghanistan-campaign,iraq-campaign~stcb1,gwot-expeditionary,gwot-service|korea-defense-service,humanitarian-service,army-asr,army-osr">Load in editor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marcinko -->
+  <div class="ref-card">
+    <div class="ref-card-header">
+      <h2>CAPT Richard Marcinko — US Navy (c. 1992)</h2>
+      <div class="ref-meta">
+        <span>18 ribbons · rw:3</span>
+        <a href="https://en.wikipedia.org/wiki/Richard_Marcinko" target="_blank" rel="noopener">Wikipedia</a>
+        <a href="https://commons.wikimedia.org/wiki/File:Dick_Marcinko%27s_ribbon_rack.png" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>
+      </div>
+    </div>
+    <div class="ref-card-body">
+      <div class="ref-compare" id="marcinko-compare">
+        <div class="ref-col">
+          <div class="ref-col-label">Reference photo</div>
+          <div class="ref-photo">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/09/Dick_Marcinko%27s_ribbon_rack.png"
+              alt="Richard Marcinko ribbon rack"
+              onerror="this.closest('.ref-col').style.display='none'; document.getElementById('marcinko-compare').classList.add('no-photo')"
+            />
+          </div>
+        </div>
+        <div class="ref-col">
+          <div class="ref-col-label">Rendered (10 of 18 ribbons in registry)</div>
+          <div class="ref-svg-wrap" id="marcinko-svg"></div>
+        </div>
+      </div>
+      <div class="ref-footer">
+        <span class="ref-note">Gray bars = ribbons not yet in registry (Vietnam-era foreign awards: RVN Cross of Gallantry, Combat Action Ribbon, RVN Campaign Medal, unit citations, marksmanship).</span>
+        <button class="load-btn" data-spec="rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-combat-action,navy-puc~stcb1,navy-gcm~stcb1|national-defense-service,armed-forces-expeditionary,vietnam-service~stcb4|rvn-cross-gallantry-unit,rvn-campaign,rvn-gallantry-cross-unit|rvn-civil-actions-unit,rvn-civil-actions-2nd,expert-rifleman">Load in editor</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="module">
   import { render } from './rackspec.js';
 
-  const input      = document.getElementById('spec-input');
-  const svgOutput  = document.getElementById('svg-output');
-  const errorBox   = document.getElementById('error-box');
+  // ── Tab switching ──────────────────────────────────────────────────────────
+  const tabs    = document.querySelectorAll('.tab');
+  const panels  = document.querySelectorAll('.tab-content');
+  let refRendered = false;
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === target));
+      panels.forEach(p => {
+        const isTarget = p.id === `tab-${target}`;
+        p.classList.toggle('active', isTarget);
+      });
+      if (target === 'reference' && !refRendered) {
+        renderReferenceSections();
+        refRendered = true;
+      }
+    });
+  });
+
+  // ── Editor ─────────────────────────────────────────────────────────────────
+  const input       = document.getElementById('spec-input');
+  const svgOutput   = document.getElementById('svg-output');
+  const errorBox    = document.getElementById('error-box');
   const placeholder = document.getElementById('placeholder');
-  const statusDot  = document.getElementById('status-dot');
-  const statusText = document.getElementById('status-text');
-  const copyBtn    = document.getElementById('copy-btn');
-  const scroll     = document.getElementById('output-scroll');
+  const statusDot   = document.getElementById('status-dot');
+  const statusText  = document.getElementById('status-text');
+  const copyBtn     = document.getElementById('copy-btn');
+  const scroll      = document.getElementById('output-scroll');
 
   let lastSVG = '';
   let debounceTimer = null;
@@ -308,9 +526,8 @@
     scroll.classList.toggle('empty', state !== 'svg');
   }
 
-  function renderSpec(spec) {
+  function renderInEditor(spec) {
     const trimmed = spec.trim();
-
     if (!trimmed) {
       showState('empty');
       setStatus('', 'Ready');
@@ -318,7 +535,6 @@
       lastSVG = '';
       return;
     }
-
     try {
       const svg = render(trimmed);
       lastSVG = svg;
@@ -337,7 +553,7 @@
 
   input.addEventListener('input', () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => renderSpec(input.value), 250);
+    debounceTimer = setTimeout(() => renderInEditor(input.value), 250);
   });
 
   copyBtn.addEventListener('click', async () => {
@@ -351,7 +567,42 @@
   document.querySelectorAll('.example-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       input.value = btn.dataset.spec;
-      renderSpec(input.value);
+      renderInEditor(input.value);
+    });
+  });
+
+  // ── Reference Racks ────────────────────────────────────────────────────────
+  const REFERENCE_RACKS = [
+    {
+      svgId: 'mcchystal-svg',
+      spec: 'rack/v1;br:us-army;ut:service;rw:4;defense-distinguished-service~olcb1,army-dsm,defense-superior-service~olcb1,army-lom~olcb2|army-bsm~vd,defense-meritorious-service,army-msm~olcb3,army-arcom~vd.olcb1|army-aam,national-defense-service~stcb1,armed-forces-expeditionary,army-swasm~stcb2|afghanistan-campaign,iraq-campaign~stcb1,gwot-expeditionary,gwot-service|korea-defense-service,humanitarian-service,army-asr,army-osr',
+    },
+    {
+      svgId: 'marcinko-svg',
+      spec: 'rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-combat-action,navy-puc~stcb1,navy-gcm~stcb1|national-defense-service,armed-forces-expeditionary,vietnam-service~stcb4|rvn-cross-gallantry-unit,rvn-campaign,rvn-gallantry-cross-unit|rvn-civil-actions-unit,rvn-civil-actions-2nd,expert-rifleman',
+    },
+  ];
+
+  function renderReferenceSections() {
+    for (const { svgId, spec } of REFERENCE_RACKS) {
+      const container = document.getElementById(svgId);
+      if (!container) continue;
+      try {
+        container.innerHTML = render(spec);
+      } catch (err) {
+        container.innerHTML = `<span style="color:var(--error);font-size:12px">${err.message ?? err}</span>`;
+      }
+    }
+  }
+
+  // Load-in-editor buttons on the reference tab
+  document.querySelectorAll('.load-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.spec;
+      // Switch to editor tab
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === 'editor'));
+      panels.forEach(p => p.classList.toggle('active', p.id === 'tab-editor'));
+      renderInEditor(input.value);
     });
   });
 </script>

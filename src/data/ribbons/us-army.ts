@@ -249,13 +249,15 @@ export const ARMY_RIBBONS: RegistryEntry[] = [
     id: 'army-aam',
     name: 'Army Achievement Medal',
     branch: ['us-army'],
-    // Green | white | green | white | blue center | white | green | white | green †
+    // Green | white | green | white | blue | white center | blue | white | green | white | green †
     stripes: [
       { color: '$myrtle-green',     width:  8 },
       { color: '$white',            width:  4 },
       { color: '$myrtle-green',     width:  4 },
       { color: '$white',            width:  4 },
-      { color: '$ultramarine-blue', width: 36 },
+      { color: '$ultramarine-blue', width: 16 },
+      { color: '$white',            width:  4 },
+      { color: '$ultramarine-blue', width: 16 },
       { color: '$white',            width:  4 },
       { color: '$myrtle-green',     width:  4 },
       { color: '$white',            width:  4 },

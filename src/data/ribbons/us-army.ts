@@ -293,15 +293,18 @@ export const ARMY_RIBBONS: RegistryEntry[] = [
     id: 'army-ncopdr',
     name: 'NCO Professional Development Ribbon',
     branch: ['us-army'],
-    // Myrtle green | golden yellow | myrtle green | black center | myrtle green | golden yellow | myrtle green
-    // 8 + 12 + 8 + 32 + 8 + 12 + 8 = 88/64"
+    // green | gold | green | gold | black | gold | green | gold | green
+    // AR 600-8-22: myrtle green / golden yellow alternating, wide black center
+    // 8 + 8 + 6 + 4 + 36 + 4 + 6 + 8 + 8 = 88/64"
     stripes: [
       { color: '$myrtle-green',  width:  8 },
-      { color: '$golden-yellow', width: 12 },
-      { color: '$myrtle-green',  width:  8 },
-      { color: '$black',         width: 32 },
-      { color: '$myrtle-green',  width:  8 },
-      { color: '$golden-yellow', width: 12 },
+      { color: '$golden-yellow', width:  8 },
+      { color: '$myrtle-green',  width:  6 },
+      { color: '$golden-yellow', width:  4 },
+      { color: '$black',         width: 36 },
+      { color: '$golden-yellow', width:  4 },
+      { color: '$myrtle-green',  width:  6 },
+      { color: '$golden-yellow', width:  8 },
       { color: '$myrtle-green',  width:  8 },
     ],
     authorizedDevices: ['num'],

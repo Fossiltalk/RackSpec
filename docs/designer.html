@@ -166,6 +166,54 @@
       min-height: 0;
     }
 
+    /* Import bar */
+    .import-bar {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .import-bar input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      outline: none;
+      padding: 5px 8px;
+    }
+    .import-bar input:focus { border-color: var(--accent); }
+    .import-bar input::placeholder { color: var(--muted); }
+
+    .import-bar .import-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      transition: color 0.1s, border-color 0.1s;
+      flex-shrink: 0;
+    }
+    .import-bar .import-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .import-error {
+      font-size: 10px;
+      color: var(--error);
+      flex-shrink: 0;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     /* Settings bar */
     .settings-bar {
       padding: 10px 14px;
@@ -540,6 +588,12 @@
       </label>
     </div>
 
+    <div class="import-bar">
+      <input type="text" id="import-input" placeholder="Paste a DSL string to import…" autocomplete="off" spellcheck="false">
+      <span class="import-error" id="import-error"></span>
+      <button class="import-btn" id="import-btn">Import</button>
+    </div>
+
     <div class="preview-area" id="preview-area">
       <div class="preview-empty" id="preview-empty">Add ribbons to see a preview</div>
     </div>
@@ -565,7 +619,7 @@
 </div>
 
 <script type="module">
-import { ALL_RIBBONS, PALETTE, render } from './rackspec.js';
+import { ALL_RIBBONS, PALETTE, render, parse } from './rackspec.js';
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -1020,6 +1074,86 @@ function removeRibbon(rowIdx, colIdx) {
   renderDeviceEditor();
   schedulePreview();
 }
+
+// ── DSL import ───────────────────────────────────────────────────────────────
+
+function decorationsToDevices(decorations) {
+  const dev = defaultDevices();
+  for (const d of decorations) {
+    if (d.kind === 'flag' && d.key === 'f') {
+      dev.frame = d.value;
+    } else if (d.kind === 'device') {
+      const { typeCode, material, count, pos } = d;
+      if (pos) dev.posOverride = pos;
+      if (typeCode === 'vd') dev.vd = true;
+      else if (typeCode === 'olc' && material === 's') dev.olcs = true;
+      else if (typeCode === 'olc') dev.olcb = count ?? 1;
+      else if (typeCode === 'stc' && material === 's') dev.stcs = count ?? 1;
+      else if (typeCode === 'stc') dev.stcb = count ?? 1;
+      else if (typeCode === 'st' && material === 's') dev.sts = true;
+      else if (typeCode === 'st') dev.stg = count ?? 1;
+      else if (typeCode === 'knt') dev.knt = count ?? 1;
+    }
+  }
+  return dev;
+}
+
+function importDSL(dslString) {
+  const errEl = document.getElementById('import-error');
+  const trimmed = dslString.trim();
+  if (!trimmed) return;
+
+  let parsed;
+  try {
+    parsed = parse(trimmed);
+  } catch (err) {
+    errEl.textContent = err.message ?? String(err);
+    return;
+  }
+  errEl.textContent = '';
+
+  // Update state from parsed header
+  state.branch    = parsed.header.br;
+  state.rowWidth  = parsed.header.rw;
+  state.alignment = parsed.header.ra;
+  state.selected  = null;
+
+  // Convert rows
+  state.rows = parsed.leftRows.map(row =>
+    row
+      .filter(token => token.ref.kind === 'slug')
+      .map(token => ({
+        id:      token.ref.id,
+        devices: decorationsToDevices(token.decorations),
+      }))
+  );
+
+  // Sync settings UI
+  document.getElementById('dsl-branch').value = state.branch;
+  document.querySelectorAll('[data-rw]').forEach(b =>
+    b.classList.toggle('active', b.dataset.rw === String(state.rowWidth))
+  );
+  document.querySelectorAll('[data-ra]').forEach(b =>
+    b.classList.toggle('active', b.dataset.ra === state.alignment)
+  );
+
+  renderRows();
+  renderDeviceEditor();
+  schedulePreview();
+}
+
+document.getElementById('import-btn').addEventListener('click', () => {
+  importDSL(document.getElementById('import-input').value);
+});
+
+document.getElementById('import-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') importDSL(e.target.value);
+});
+
+// Auto-import on paste if the field is empty or matches a DSL pattern
+document.getElementById('import-input').addEventListener('paste', e => {
+  setTimeout(() => importDSL(e.target.value), 0);
+});
 
 // ── Settings wiring ──────────────────────────────────────────────────────────
 

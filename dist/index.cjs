@@ -1157,19 +1157,14 @@ var ARMY_RIBBONS = [
     id: "army-arcom",
     name: "Army Commendation Medal",
     branch: ["us-army"],
-    // White outer | myrtle green segmented stripes | white center-ish
+    // Wide myrtle-green flanks | thin golden-yellow pinstripes | white center
+    // AR 600-8-22: 1/2" green, 1/16" gold, 1/4" white, 1/16" gold, 1/2" green → 88/64"
     stripes: [
-      { color: "$white", width: 4 },
-      { color: "$myrtle-green", width: 8 },
-      { color: "$white", width: 2 },
-      { color: "$myrtle-green", width: 3 },
-      { color: "$white", width: 2 },
-      { color: "$myrtle-green", width: 3 },
-      { color: "$white", width: 2 },
-      { color: "$myrtle-green", width: 3 },
-      { color: "$white", width: 2 },
-      { color: "$myrtle-green", width: 8 },
-      { color: "$white", width: 4 }
+      { color: "$myrtle-green", width: 32 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$white", width: 16 },
+      { color: "$golden-yellow", width: 4 },
+      { color: "$myrtle-green", width: 32 }
     ],
     authorizedDevices: ["olc", "vd"],
     frame: "none"
@@ -1215,21 +1210,16 @@ var ARMY_RIBBONS = [
     id: "army-gcm",
     name: "Army Good Conduct Medal",
     branch: ["us-army"],
-    // Predominantly scarlet with thin white pinstripes
+    // Wide scarlet flanks with 3 thin white center stripes (AR 600-8-22)
+    // 37 + 2 + 4 + 2 + 4 + 2 + 37 = 88/64"
     stripes: [
-      { color: "$scarlet", width: 2 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 2 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 2 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 18 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 2 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 2 },
-      { color: "$white", width: 1 },
-      { color: "$scarlet", width: 2 }
+      { color: "$scarlet", width: 37 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 4 },
+      { color: "$white", width: 2 },
+      { color: "$scarlet", width: 37 }
     ],
     authorizedDevices: ["knt"],
     frame: "none"

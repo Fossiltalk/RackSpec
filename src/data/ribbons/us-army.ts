@@ -209,14 +209,19 @@ export const ARMY_RIBBONS: RegistryEntry[] = [
     id: 'army-arcom',
     name: 'Army Commendation Medal',
     branch: ['us-army'],
-    // Wide myrtle-green flanks | thin golden-yellow pinstripes | white center
-    // AR 600-8-22: 1/2" green, 1/16" gold, 1/4" white, 1/16" gold, 1/2" green → 88/64"
+    // White outer | myrtle green segmented stripes | white center-ish
     stripes: [
-      { color: '$myrtle-green',  width: 32 },
-      { color: '$golden-yellow', width:  4 },
-      { color: '$white',         width: 16 },
-      { color: '$golden-yellow', width:  4 },
-      { color: '$myrtle-green',  width: 32 },
+      { color: '$white',        width: 4 },
+      { color: '$myrtle-green', width: 8 },
+      { color: '$white',        width: 2 },
+      { color: '$myrtle-green', width: 3 },
+      { color: '$white',        width: 2 },
+      { color: '$myrtle-green', width: 3 },
+      { color: '$white',        width: 2 },
+      { color: '$myrtle-green', width: 3 },
+      { color: '$white',        width: 2 },
+      { color: '$myrtle-green', width: 8 },
+      { color: '$white',        width: 4 },
     ],
     authorizedDevices: ['olc', 'vd'],
     frame: 'none',

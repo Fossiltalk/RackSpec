@@ -368,6 +368,8 @@
 <header>
   <h1>RackSpec</h1>
   <span>military ribbon rack renderer</span>
+  <div style="flex:1"></div>
+  <a href="designer.html" style="color:var(--accent);font-size:12px;text-decoration:none;border:1px solid var(--border);border-radius:var(--radius);padding:4px 10px;transition:border-color 0.1s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">Open Designer →</a>
 </header>
 
 <nav class="tab-bar">
@@ -448,7 +450,7 @@
     <div class="ref-card-header">
       <h2>CAPT Richard Marcinko — US Navy (c. 1992)</h2>
       <div class="ref-meta">
-        <span>18 ribbons · rw:3</span>
+        <span>12 ribbons · rw:3</span>
         <a href="https://en.wikipedia.org/wiki/Richard_Marcinko" target="_blank" rel="noopener">Wikipedia</a>
         <a href="https://commons.wikimedia.org/wiki/File:Dick_Marcinko%27s_ribbon_rack.png" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>
       </div>
@@ -466,13 +468,13 @@
           </div>
         </div>
         <div class="ref-col">
-          <div class="ref-col-label">Rendered (10 of 18 ribbons in registry)</div>
+          <div class="ref-col-label">Rendered (8 of 12 ribbons in registry)</div>
           <div class="ref-svg-wrap" id="marcinko-svg"></div>
         </div>
       </div>
       <div class="ref-footer">
-        <span class="ref-note">Gray bars = ribbons not yet in registry (Vietnam-era foreign awards: RVN Cross of Gallantry, Combat Action Ribbon, RVN Campaign Medal, unit citations, marksmanship).</span>
-        <button class="load-btn" data-spec="rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-combat-action,navy-puc~stcb1,navy-gcm~stcb1|national-defense-service,armed-forces-expeditionary,vietnam-service~stcb4|rvn-cross-gallantry-unit,rvn-campaign,rvn-gallantry-cross-unit|rvn-civil-actions-unit,rvn-civil-actions-2nd,expert-rifleman">Load in editor</button>
+        <span class="ref-note">Gray bars = ribbons not yet in registry (RVN Cross of Gallantry, RVN Campaign Medal). Prior image analysis incorrectly produced 6 rows; corrected to 4 rows matching the reference photo.</span>
+        <button class="load-btn" data-spec="rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-puc~stcb1,navy-gcm~stcb1,national-defense-service|armed-forces-expeditionary,vietnam-service~stcb4,rvn-campaign">Load in editor</button>
       </div>
     </div>
   </div>
@@ -579,7 +581,7 @@
     },
     {
       svgId: 'marcinko-svg',
-      spec: 'rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-combat-action,navy-puc~stcb1,navy-gcm~stcb1|national-defense-service,armed-forces-expeditionary,vietnam-service~stcb4|rvn-cross-gallantry-unit,rvn-campaign,rvn-gallantry-cross-unit|rvn-civil-actions-unit,rvn-civil-actions-2nd,expert-rifleman',
+      spec: 'rack/v1;br:us-navy;ut:service;rw:3;silver-star,navy-lom,navy-bsm~vd|navy-commendation~vd,rvn-cross-gallantry,defense-meritorious-service|navy-puc~stcb1,navy-gcm~stcb1,national-defense-service|armed-forces-expeditionary,vietnam-service~stcb4,rvn-campaign',
     },
   ];
 
@@ -593,6 +595,13 @@
         container.innerHTML = `<span style="color:var(--error);font-size:12px">${err.message ?? err}</span>`;
       }
     }
+  }
+
+  // Pre-fill from URL ?dsl= param (used by designer "Open in Editor")
+  const urlDsl = new URLSearchParams(window.location.search).get('dsl');
+  if (urlDsl) {
+    input.value = decodeURIComponent(urlDsl);
+    renderInEditor(input.value);
   }
 
   // Load-in-editor buttons on the reference tab

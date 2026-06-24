@@ -5,6 +5,7 @@ import { getDefaultRegistry, mergeRegistry } from './registry.js';
 import { renderDevice, renderFrame } from './devices.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
+const WEAVE_ID = 'rib-weave';
 
 // ─── Main renderer ────────────────────────────────────────────────────────────
 
@@ -35,6 +36,7 @@ function emitSVG(layout: RackLayout, scaleFactor: number): string {
 
   return [
     `<svg xmlns="${SVG_NS}" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}" height="${totalH}" role="img">`,
+    emitDefs(),
     leftSvg,
     rightSvg,
     '</svg>',
@@ -78,6 +80,17 @@ function emitRibbon(r: LayoutRibbon, offsetX: number, offsetY: number, scaleFact
   return parts.join('\n');
 }
 
+function emitDefs(): string {
+  return [
+    '<defs>',
+    `  <pattern id="${WEAVE_ID}" x="0" y="0" width="4" height="2" patternUnits="userSpaceOnUse">`,
+    `    <rect x="0" y="0" width="4" height="1" fill="rgba(255,255,255,0.11)"/>`,
+    `    <rect x="0" y="1" width="4" height="1" fill="rgba(0,0,0,0.09)"/>`,
+    `  </pattern>`,
+    '</defs>',
+  ].join('\n');
+}
+
 function emitStripes(
   x: number,
   y: number,
@@ -100,6 +113,14 @@ function emitStripes(
     );
     currentX += stripeW;
   }
+
+  // Woven rib texture overlay
+  parts.push(
+    `<rect x="${x.toFixed(2)}" y="${y}" width="${totalW.toFixed(2)}" height="${totalH}" fill="url(#${WEAVE_ID})"/>`
+  );
+  // Subtle top/bottom edge
+  parts.push(`<line x1="${x.toFixed(2)}" y1="${y}" x2="${(x + totalW).toFixed(2)}" y2="${y}" stroke="rgba(0,0,0,0.30)" stroke-width="0.75"/>`);
+  parts.push(`<line x1="${x.toFixed(2)}" y1="${y + totalH}" x2="${(x + totalW).toFixed(2)}" y2="${y + totalH}" stroke="rgba(0,0,0,0.30)" stroke-width="0.75"/>`);
 
   return parts.join('');
 }

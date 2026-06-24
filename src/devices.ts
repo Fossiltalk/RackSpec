@@ -38,28 +38,29 @@ function renderStar(d: LayoutDevice, diameter: number, defaultMat: string): stri
 // ─── Oak leaf cluster ──────────────────────────────────────────────────────────
 
 function oakLeafPath(cx: number, cy: number, W: number, H: number): string {
-  // 5-lobe horizontal oak leaf: stem at left (−W, 0), tip at right (+W, 0).
-  // Lobes extend ≈2×H above/below midrib; sinuses dip to ≈0.3×H.
+  // Rounded bulbous lobes matching real OLC pin silhouette.
+  // Control points at same Y as lobe peak → curve arrives/leaves horizontally → round tops.
+  // Narrow, U-shaped sinuses close to midrib between each lobe.
   const f = (n: number) => n.toFixed(2);
   function p(nx: number, ny: number) { return `${f(cx + nx * W)},${f(cy + ny * H)}`; }
   return [
     `M ${p(-1, 0)}`,
-    // upper-left lobe
-    `C ${p(-0.95, -0.9)} ${p(-0.75, -1.75)} ${p(-0.62, -1.65)}`,
-    `C ${p(-0.50, -1.55)} ${p(-0.42, -0.60)} ${p(-0.32, -0.30)}`,
-    // upper-center lobe (tallest)
-    `C ${p(-0.22, -0.10)} ${p(-0.12, -1.90)} ${p( 0.05, -2.00)}`,
-    `C ${p( 0.25, -2.00)} ${p( 0.35, -0.65)} ${p( 0.42, -0.30)}`,
-    // upper-right lobe
-    `C ${p( 0.49,  0.00)} ${p( 0.60, -1.40)} ${p( 0.72, -1.25)}`,
-    `C ${p( 0.83, -1.05)} ${p( 0.96, -0.50)} ${p( 1.00,  0.00)}`,
+    // upper-left lobe — peak at (-0.65, -1.8); flat-topped by matching control Y
+    `C ${p(-0.92, -0.90)} ${p(-0.80, -1.80)} ${p(-0.65, -1.80)}`,
+    `C ${p(-0.50, -1.80)} ${p(-0.42, -0.50)} ${p(-0.32, -0.15)}`,
+    // upper-center lobe (tallest) — peak at (-0.02, -1.90)
+    `C ${p(-0.22, -0.50)} ${p(-0.18, -1.90)} ${p(-0.02, -1.90)}`,
+    `C ${p( 0.14, -1.90)} ${p( 0.28, -0.50)} ${p( 0.38, -0.15)}`,
+    // upper-right lobe (shorter near tip) — peak at (0.70, -1.20)
+    `C ${p( 0.45, -0.50)} ${p( 0.58, -1.20)} ${p( 0.70, -1.20)}`,
+    `C ${p( 0.82, -1.20)} ${p( 0.96, -0.50)} ${p( 1.00,  0.00)}`,
     // — lower half: exact Y-mirror of upper, reversed —
-    `C ${p( 0.96,  0.50)} ${p( 0.83,  1.05)} ${p( 0.72,  1.25)}`,
-    `C ${p( 0.60,  1.40)} ${p( 0.49,  0.00)} ${p( 0.42,  0.30)}`,
-    `C ${p( 0.35,  0.65)} ${p( 0.25,  2.00)} ${p( 0.05,  2.00)}`,
-    `C ${p(-0.12,  1.90)} ${p(-0.22,  0.10)} ${p(-0.32,  0.30)}`,
-    `C ${p(-0.42,  0.60)} ${p(-0.50,  1.55)} ${p(-0.62,  1.65)}`,
-    `C ${p(-0.75,  1.75)} ${p(-0.95,  0.90)} ${p(-1.00,  0.00)}`,
+    `C ${p( 0.96,  0.50)} ${p( 0.82,  1.20)} ${p( 0.70,  1.20)}`,
+    `C ${p( 0.58,  1.20)} ${p( 0.45,  0.50)} ${p( 0.38,  0.15)}`,
+    `C ${p( 0.28,  0.50)} ${p( 0.14,  1.90)} ${p(-0.02,  1.90)}`,
+    `C ${p(-0.18,  1.90)} ${p(-0.22,  0.50)} ${p(-0.32,  0.15)}`,
+    `C ${p(-0.42,  0.50)} ${p(-0.50,  1.80)} ${p(-0.65,  1.80)}`,
+    `C ${p(-0.80,  1.80)} ${p(-0.92,  0.90)} ${p(-1.00,  0.00)}`,
     'Z',
   ].join(' ');
 }
@@ -67,11 +68,15 @@ function oakLeafPath(cx: number, cy: number, W: number, H: number): string {
 function renderOLC(d: LayoutDevice, scaleFactor: number): string {
   const { fill, stroke } = matColor(d.material, 'b');
   const W = (OLC_SIZE * scaleFactor) / 2;
-  const H = W * 0.48;  // leaf height ≈ half the width
+  const H = W * 0.52;
   const f = (n: number) => n.toFixed(2);
   const pathData = oakLeafPath(d.cx, d.cy, W, H);
-  const midrib = `<line x1="${f(d.cx - W * 0.88)}" y1="${f(d.cy)}" x2="${f(d.cx + W * 0.88)}" y2="${f(d.cy)}" stroke="${stroke}" stroke-width="0.6" opacity="0.5"/>`;
-  return `<path d="${pathData}" fill="${fill}" stroke="${stroke}" stroke-width="0.75"/>${midrib}`;
+  // Central midrib
+  const midrib = `<line x1="${f(d.cx - W * 0.9)}" y1="${f(d.cy)}" x2="${f(d.cx + W * 0.88)}" y2="${f(d.cy)}" stroke="${stroke}" stroke-width="0.7" opacity="0.6"/>`;
+  // Small acorn dots at lower-stem area (distinctive detail of real OLC pin)
+  const dot1 = `<circle cx="${f(d.cx - W * 0.70)}" cy="${f(d.cy + H * 0.88)}" r="${f(H * 0.26)}" fill="${stroke}" stroke="none"/>`;
+  const dot2 = `<circle cx="${f(d.cx - W * 0.82)}" cy="${f(d.cy + H * 0.15)}" r="${f(H * 0.20)}" fill="${stroke}" stroke="none"/>`;
+  return `<path d="${pathData}" fill="${fill}" stroke="${stroke}" stroke-width="0.75"/>${midrib}${dot1}${dot2}`;
 }
 
 // ─── Hourglass ────────────────────────────────────────────────────────────────

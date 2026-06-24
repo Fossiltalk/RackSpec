@@ -37,23 +37,41 @@ function renderStar(d: LayoutDevice, diameter: number, defaultMat: string): stri
 
 // ─── Oak leaf cluster ──────────────────────────────────────────────────────────
 
+function oakLeafPath(cx: number, cy: number, W: number, H: number): string {
+  // 5-lobe horizontal oak leaf: stem at left (−W, 0), tip at right (+W, 0).
+  // Lobes extend ≈2×H above/below midrib; sinuses dip to ≈0.3×H.
+  const f = (n: number) => n.toFixed(2);
+  function p(nx: number, ny: number) { return `${f(cx + nx * W)},${f(cy + ny * H)}`; }
+  return [
+    `M ${p(-1, 0)}`,
+    // upper-left lobe
+    `C ${p(-0.95, -0.9)} ${p(-0.75, -1.75)} ${p(-0.62, -1.65)}`,
+    `C ${p(-0.50, -1.55)} ${p(-0.42, -0.60)} ${p(-0.32, -0.30)}`,
+    // upper-center lobe (tallest)
+    `C ${p(-0.22, -0.10)} ${p(-0.12, -1.90)} ${p( 0.05, -2.00)}`,
+    `C ${p( 0.25, -2.00)} ${p( 0.35, -0.65)} ${p( 0.42, -0.30)}`,
+    // upper-right lobe
+    `C ${p( 0.49,  0.00)} ${p( 0.60, -1.40)} ${p( 0.72, -1.25)}`,
+    `C ${p( 0.83, -1.05)} ${p( 0.96, -0.50)} ${p( 1.00,  0.00)}`,
+    // — lower half: exact Y-mirror of upper, reversed —
+    `C ${p( 0.96,  0.50)} ${p( 0.83,  1.05)} ${p( 0.72,  1.25)}`,
+    `C ${p( 0.60,  1.40)} ${p( 0.49,  0.00)} ${p( 0.42,  0.30)}`,
+    `C ${p( 0.35,  0.65)} ${p( 0.25,  2.00)} ${p( 0.05,  2.00)}`,
+    `C ${p(-0.12,  1.90)} ${p(-0.22,  0.10)} ${p(-0.32,  0.30)}`,
+    `C ${p(-0.42,  0.60)} ${p(-0.50,  1.55)} ${p(-0.62,  1.65)}`,
+    `C ${p(-0.75,  1.75)} ${p(-0.95,  0.90)} ${p(-1.00,  0.00)}`,
+    'Z',
+  ].join(' ');
+}
+
 function renderOLC(d: LayoutDevice, scaleFactor: number): string {
   const { fill, stroke } = matColor(d.material, 'b');
-  const s = OLC_SIZE * scaleFactor;
-  const r = s / 2;
-  // Three-lobed approximation using circles for the lobes
-  const stem = s * 0.15;
-  const lobeR = r * 0.42;
-  return [
-    // Center lobe
-    `<circle cx="${d.cx.toFixed(2)}" cy="${(d.cy - r * 0.2).toFixed(2)}" r="${(lobeR).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-    // Left lobe
-    `<circle cx="${(d.cx - r * 0.45).toFixed(2)}" cy="${(d.cy + r * 0.15).toFixed(2)}" r="${(lobeR * 0.85).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-    // Right lobe
-    `<circle cx="${(d.cx + r * 0.45).toFixed(2)}" cy="${(d.cy + r * 0.15).toFixed(2)}" r="${(lobeR * 0.85).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-    // Stem
-    `<rect x="${(d.cx - stem / 2).toFixed(2)}" y="${(d.cy + r * 0.3).toFixed(2)}" width="${stem.toFixed(2)}" height="${(r * 0.45).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="0.5"/>`,
-  ].join('');
+  const W = (OLC_SIZE * scaleFactor) / 2;
+  const H = W * 0.48;  // leaf height ≈ half the width
+  const f = (n: number) => n.toFixed(2);
+  const pathData = oakLeafPath(d.cx, d.cy, W, H);
+  const midrib = `<line x1="${f(d.cx - W * 0.88)}" y1="${f(d.cy)}" x2="${f(d.cx + W * 0.88)}" y2="${f(d.cy)}" stroke="${stroke}" stroke-width="0.6" opacity="0.5"/>`;
+  return `<path d="${pathData}" fill="${fill}" stroke="${stroke}" stroke-width="0.75"/>${midrib}`;
 }
 
 // ─── Hourglass ────────────────────────────────────────────────────────────────
@@ -112,11 +130,36 @@ function renderNumeral(d: LayoutDevice, ribbonH: number, scaleFactor: number): s
 // ─── Knot clasp ───────────────────────────────────────────────────────────────
 
 function renderKnot(d: LayoutDevice, scaleFactor: number): string {
-  const w = Math.round(KNOT_W * scaleFactor);
-  const h = Math.round(KNOT_H * scaleFactor);
-  const x = d.cx - w / 2;
-  const y = d.cy - h / 2;
-  return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w}" height="${h}" rx="2" fill="#8B5A2B" stroke="#5C3A1A" stroke-width="1"/>`;
+  const { fill, stroke } = matColor(d.material, 'b');
+  const W = (KNOT_W * scaleFactor) / 2;   // half-width
+  const H = (KNOT_H * scaleFactor) / 2;   // half-height
+  const cx = d.cx, cy = d.cy;
+  const nw = W * 0.20;   // half-width of center neck
+  const nh = H * 0.38;   // half-height of center neck
+  const f = (n: number) => n.toFixed(2);
+
+  // Two oval lobes pinched at center — classic square-knot silhouette
+  const pathData = [
+    `M ${f(cx - nw)},${f(cy - nh)}`,
+    // left lobe top arc
+    `C ${f(cx - W * 0.3)},${f(cy - H)} ${f(cx - W)},${f(cy - H * 0.85)} ${f(cx - W)},${f(cy)}`,
+    // left lobe bottom arc
+    `C ${f(cx - W)},${f(cy + H * 0.85)} ${f(cx - W * 0.3)},${f(cy + H)} ${f(cx - nw)},${f(cy + nh)}`,
+    // center bottom bump (knot crossover)
+    `Q ${f(cx)},${f(cy + nh * 1.6)} ${f(cx + nw)},${f(cy + nh)}`,
+    // right lobe bottom arc
+    `C ${f(cx + W * 0.3)},${f(cy + H)} ${f(cx + W)},${f(cy + H * 0.85)} ${f(cx + W)},${f(cy)}`,
+    // right lobe top arc
+    `C ${f(cx + W)},${f(cy - H * 0.85)} ${f(cx + W * 0.3)},${f(cy - H)} ${f(cx + nw)},${f(cy - nh)}`,
+    // center top bump (knot crossover)
+    `Q ${f(cx)},${f(cy - nh * 1.6)} ${f(cx - nw)},${f(cy - nh)}`,
+    'Z',
+  ].join(' ');
+
+  // Small filled ellipse at center suggests the knot crossing
+  const center = `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(nw * 1.4)}" ry="${f(nh * 1.6)}" fill="${stroke}" stroke="none"/>`;
+
+  return `<path d="${pathData}" fill="${fill}" stroke="${stroke}" stroke-width="0.75"/>${center}`;
 }
 
 // ─── Clasp device ─────────────────────────────────────────────────────────────
@@ -149,16 +192,13 @@ function renderRosette(d: LayoutDevice, scaleFactor: number): string {
 // ─── MID (Mention in Despatches oak leaf) ─────────────────────────────────────
 
 function renderMID(d: LayoutDevice, scaleFactor: number): string {
-  // Horizontal (rotated 90°) oak leaf — reuse OLC circles, just flattened
   const { fill, stroke } = matColor('s', 's');
-  const s = OLC_SIZE * scaleFactor * 0.8;
-  const r = s / 2;
-  const lobeR = r * 0.42;
-  return [
-    `<circle cx="${d.cx.toFixed(2)}" cy="${d.cy.toFixed(2)}" r="${(lobeR).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-    `<circle cx="${(d.cx - r * 0.5).toFixed(2)}" cy="${d.cy.toFixed(2)}" r="${(lobeR * 0.8).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-    `<circle cx="${(d.cx + r * 0.5).toFixed(2)}" cy="${d.cy.toFixed(2)}" r="${(lobeR * 0.8).toFixed(2)}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`,
-  ].join('');
+  const W = (OLC_SIZE * scaleFactor * 0.8) / 2;
+  const H = W * 0.48;
+  const f = (n: number) => n.toFixed(2);
+  const pathData = oakLeafPath(d.cx, d.cy, W, H);
+  const midrib = `<line x1="${f(d.cx - W * 0.88)}" y1="${f(d.cy)}" x2="${f(d.cx + W * 0.88)}" y2="${f(d.cy)}" stroke="${stroke}" stroke-width="0.6" opacity="0.5"/>`;
+  return `<path d="${pathData}" fill="${fill}" stroke="${stroke}" stroke-width="0.75"/>${midrib}`;
 }
 
 // ─── Frame ────────────────────────────────────────────────────────────────────

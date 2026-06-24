@@ -84,8 +84,8 @@ function emitDefs(): string {
   return [
     '<defs>',
     `  <pattern id="${WEAVE_ID}" x="0" y="0" width="4" height="2" patternUnits="userSpaceOnUse">`,
-    `    <rect x="0" y="0" width="4" height="1" fill="rgba(255,255,255,0.11)"/>`,
-    `    <rect x="0" y="1" width="4" height="1" fill="rgba(0,0,0,0.09)"/>`,
+    `    <rect x="0" y="0" width="4" height="1" fill="rgba(255,255,255,0.22)"/>`,
+    `    <rect x="0" y="1" width="4" height="1" fill="rgba(0,0,0,0.18)"/>`,
     `  </pattern>`,
     '</defs>',
   ].join('\n');

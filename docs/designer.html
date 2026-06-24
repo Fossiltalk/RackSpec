@@ -967,12 +967,14 @@ function renderDeviceEditor() {
   // Device fields
   function bindField(id, key, parseAs) {
     const el = document.getElementById(id);
-    el.addEventListener('change', () => {
+    const handler = () => {
       let val = parseAs === 'bool' ? el.checked : Math.max(0, parseInt(el.value) || 0);
       if (parseAs === 'str') val = el.value;
       slot.devices[key] = val;
       schedulePreview();
-    });
+    };
+    el.addEventListener('input', handler);
+    el.addEventListener('change', handler);
   }
   bindField('dev-vd',    'vd',         'bool');
   bindField('dev-frame', 'frame',      'str');

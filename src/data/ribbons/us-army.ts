@@ -335,15 +335,15 @@ export const ARMY_RIBBONS: RegistryEntry[] = [
     id: 'army-osr',
     name: 'Overseas Service Ribbon',
     branch: ['us-army'],
-    // Old glory blue | grotto blue | golden yellow | old glory red | golden yellow | grotto blue | old glory blue †
+    // Old glory blue | sky blue | golden yellow | old glory red | golden yellow | sky blue | old glory blue
     stripes: [
-      { color: '$old-glory-blue',  width: 12 },
-      { color: '$grotto-blue',     width: 16 },
-      { color: '$golden-yellow',   width:  4 },
-      { color: '$old-glory-red',   width: 24 },
-      { color: '$golden-yellow',   width:  4 },
-      { color: '$grotto-blue',     width: 16 },
-      { color: '$old-glory-blue',  width: 12 },
+      { color: '$old-glory-blue', width: 12 },
+      { color: '$sky-blue',       width: 16 },
+      { color: '$golden-yellow',  width:  4 },
+      { color: '$old-glory-red',  width: 24 },
+      { color: '$golden-yellow',  width:  4 },
+      { color: '$sky-blue',       width: 16 },
+      { color: '$old-glory-blue', width: 12 },
     ],
     authorizedDevices: ['num'],
     frame: 'none',
